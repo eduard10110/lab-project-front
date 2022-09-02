@@ -1,0 +1,87 @@
+.add-newProduct-modal {
+  position: relative;
+  top: 13%;
+  left: 30%;
+  width: 550px;
+  height: 550px;
+  background-color: white;
+}
+
+.product-form-item-wrapper {
+  display: flex;
+  height: 55px;
+  p {
+    width: 40%;
+    border: 1px solid #969393;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    font-size: 14px;
+  }
+  input,
+  select,
+  option,
+  .anp-select {
+    width: 60%;
+    font-size: 12px;
+  }
+}
+
+.add-new-product-header-wrapper {
+  background-color: #969393;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: white;
+  justify-content: space-between;
+
+  p {
+    font-size: 28px;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  h3 {
+    color: white;
+    margin-left: 10px;
+  }
+}
+
+.close-icon {
+  color: white;
+}
+
+.anp-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+
+  button {
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    margin: 0 5px;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.anp-add-button {
+  background-color: #1f7184;
+}
+
+.anp-submit-button {
+  background-color: #0a971a;
+}
+
+.anp-cancel-button {
+  background-color: #fb4343;
+}

@@ -1,0 +1,33 @@
+.header-container-wrapper {
+  width: 100%;
+  height: 35px;
+  background-color: #0a971a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: white;
+}
+
+.header-logo {
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+
+  p {
+    font-weight: 400;
+    margin-left: 5px;
+  }
+}
+
+.header-right-content {
+  width: 120px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+}

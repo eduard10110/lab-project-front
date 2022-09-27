@@ -21,6 +21,7 @@ const REQ = async (
       data,
       headers
     );
+    
     return response;
   } catch (err) {
     return serializeErrorMessage(err);

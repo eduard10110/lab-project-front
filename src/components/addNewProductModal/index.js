@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
@@ -11,7 +12,7 @@ import {
 } from "@mui/material";
 import ProductsController from "controllers/products";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const inputValuesInitialState = {
   name: "",
@@ -24,7 +25,12 @@ const inputValuesInitialState = {
   dateOfEntry: "",
 };
 
-export default function AddNewProductModal({ open, handleClose }) {
+export default function AddNewProductModal({
+  open,
+  handleClose,
+  updatableData,
+  getData,
+}) {
   const [data, setData] = useState({
     name: "",
     type: "",
@@ -36,6 +42,15 @@ export default function AddNewProductModal({ open, handleClose }) {
     dateOfEntry: "",
   });
 
+  useEffect(() => {
+    if (updatableData)
+      setData({
+        ...updatableData,
+        dateOfEntry: updatableData.dateOfEntry?.split("T")[0],
+        expirationDate: updatableData.expirationDate?.split("T")[0],
+      });
+  }, []);
+
   const handleChange = (id) => (e) => {
     setData({ ...data, [id]: e.target.value });
   };
@@ -46,12 +61,15 @@ export default function AddNewProductModal({ open, handleClose }) {
     newData.expirationDate = moment(newData.expirationDate).format(
       "MM/DD/YYYY"
     );
-    await ProductsController.createNewProduct(newData);
-    handleClose();
+    updatableData
+      ? await ProductsController.updateProduct(newData)
+      : await ProductsController.createNewProduct(newData);
   };
 
   const handleAddNewProduct = async () => {
     await addNewProduct();
+    await getData();
+    handleClose();
   };
 
   const handleAddAndContinue = async () => {

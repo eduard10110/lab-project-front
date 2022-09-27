@@ -1,0 +1,23 @@
+.edit-icon-wrapper {
+  background-color: #07a61a;
+}
+
+.delete-icon-wrapper {
+  background-color: red;
+}
+
+.table-icon-item {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 36px;
+  cursor: pointer;
+}
+
+.table-icons-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

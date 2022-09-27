@@ -15,7 +15,7 @@ function App() {
           newestOnTop={true}
           closeOnClick
         />
-        <Header />s
+        <Header />
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Menu />
           <RoutesBuilder />

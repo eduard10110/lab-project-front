@@ -3,20 +3,45 @@ import { FormControl, MenuItem, Select } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import excelIcon from "assets/images/excel-icon.png";
 import AddNewProductModal from "components/addNewProductModal";
-import { PAGES_GET_DATA_FUNCTIONS, PAGES_DATA } from "helpers/constants";
-import { useEffect, useState } from "react";
+import TableActionBarIcons from "components/tableActionBarIcons";
+import { PAGES_DATA, PAGES_GET_DATA_FUNCTIONS } from "helpers/constants";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProductIntroduction({ pageId }) {
-  const { withNewButton, buttonLabel, tableColumns } = PAGES_DATA[pageId];
-  const [addNewProductModal, setAddNewProductModal] = useState(false);
+  const tableRowActionBar = {
+    field: "actions",
+    headerName: "",
+    renderCell: (params) => (
+      <TableActionBarIcons
+        {...params}
+        handleEdit={handleAddNewProduct}
+        getData={getData}
+      />
+    ),
+  };
+  const { withNewButton, buttonLabel, tableColumns, withExport } =
+    PAGES_DATA[pageId];
+  const [rows, setRows] = useState([]);
+  const [addNewProductModal, setAddNewProductModal] = useState({
+    open: false,
+    updatableData: null,
+  });
   const [search, setSearch] = useState("");
   const [tablePaginationSettings, setTablePaginationSettings] = useState({
     rowsPerPageOptions: [10, 25, 50],
     pageSize: 10,
   });
 
+  const getData = async () => {
+    PAGES_GET_DATA_FUNCTIONS[pageId]().then((res) =>
+      !res?.hasError
+        ? setRows(res.data?.map((elem, index) => ({ ...elem, id: index + 1 })))
+        : setRows([])
+    );
+  };
+
   useEffect(() => {
-    PAGES_GET_DATA_FUNCTIONS[pageId]().then((res) => console.log(res));
+    getData();
   }, []);
 
   const handlePageSizeChange = (e) =>
@@ -27,18 +52,27 @@ export default function ProductIntroduction({ pageId }) {
 
   const handleSearch = (e) => setSearch(e.target.value);
 
-  const handleAddNewProduct = () => {
-    setAddNewProductModal(true);
-  };
+  const handleAddNewProduct =
+    (updatableData = null) =>
+    () => {
+      setAddNewProductModal({ open: true, updatableData });
+    };
 
-  const closeAddNewProductModal = () => setAddNewProductModal(false);
+  const closeAddNewProductModal = () =>
+    setAddNewProductModal({ open: false, updatableData: null });
+
+  const tableColumnsFinally = useMemo(
+    () => [...tableColumns, tableRowActionBar],
+    []
+  );
 
   return (
     <>
-      {addNewProductModal && (
+      {addNewProductModal.open && (
         <AddNewProductModal
-          open={addNewProductModal}
+          {...addNewProductModal}
           handleClose={closeAddNewProductModal}
+          getData={getData}
         />
       )}
       <div className="page-wrapper">
@@ -50,7 +84,7 @@ export default function ProductIntroduction({ pageId }) {
           <div>
             {withNewButton && (
               <button
-                onClick={handleAddNewProduct}
+                onClick={handleAddNewProduct()}
                 variant="outlined"
                 className="create-new-product-btn"
               >
@@ -82,14 +116,16 @@ export default function ProductIntroduction({ pageId }) {
               onChange={handleSearch}
               className="search-input"
             />
-            <button className="download-btn">
-              Արտահանել{" "}
-              <img className="excel-icon" src={excelIcon} alt="excelIcon" />
-            </button>
+            {withExport && (
+              <button className="download-btn">
+                Արտահանել{" "}
+                <img className="excel-icon" src={excelIcon} alt="excelIcon" />
+              </button>
+            )}
           </div>
         </div>
         <div className="table-wrapper">
-          <DataGrid columns={tableColumns} rows={[]} />
+          <DataGrid columns={tableColumnsFinally} rows={rows} />
         </div>
       </div>
     </>

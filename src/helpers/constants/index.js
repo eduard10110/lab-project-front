@@ -48,7 +48,7 @@ export const ProductIntroductionTableColumns = [
     headerName: "Հ/Հ",
   },
   {
-    flex: 1,
+    width: 100,
     field: "type",
     headerName: "Տեսակ",
   },
@@ -58,45 +58,76 @@ export const ProductIntroductionTableColumns = [
     headerName: "Անվանում",
   },
   {
-    flex: 1,
+    width: 70,
     field: "quantity",
     headerName: "Քանակ",
   },
   {
-    flex: 1,
-    field: "id5",
+    width: 70,
+    field: "unit",
     headerName: "Միավոր",
   },
   {
     flex: 1,
-    field: "id6",
+    field: "expirationDate",
     headerName: "Պիտանելիության ժամկետ",
   },
   {
-    flex: 1,
-    field: "id7",
+    width: 90,
+    field: "price",
     headerName: "Գին",
   },
   {
     flex: 1,
-    field: "id8",
+    field: "supplier",
     headerName: "Մատակարար",
   },
   {
     flex: 1,
-    field: "id9",
+    field: "dateOfEntry",
     headerName: "Մուտքագրման ա/թ",
+  },
+];
+
+const RepositoriesTableColumns = [
+  {
+    width: 40,
+    field: "id",
+    headerName: "Հ/Հ",
+  },
+  {
+    flex: 1,
+    field: "type",
+    headerName: "Տեսակ ցանկ",
+  },
+  {
+    flex: 1,
+    field: "Name",
+    headerName: "Անվանում մուտքագրման",
+  },
+  {
+    flex: 1,
+    field: "field",
+    headerName: "դաշտ",
   },
 ];
 
 export const PAGES_DATA = {
   ProductIntroduction: {
     withNewButton: true,
+    withExport: true,
     buttonLabel: "Նոր + ",
     tableColumns: ProductIntroductionTableColumns,
+  },
+  Repositories: {
+    withNewButton: true,
+    withExport: true,
+    buttonLabel: "Նոր + ",
+    tableColumns: RepositoriesTableColumns,
   },
 };
 
 export const PAGES_GET_DATA_FUNCTIONS = {
   ProductIntroduction: Utils.getProducts,
+  Repositories: Utils.getRepositories
 };

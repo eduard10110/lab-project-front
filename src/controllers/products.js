@@ -11,12 +11,27 @@ ProductsController.createNewProduct = async (body) => {
     "",
     body
   );
-  console.log(response);
+  return response;
 };
 
 ProductsController.getProducts = async () => {
   const response = await API.GET(HOSTS.BASE_URL, Controllers.product, "");
-  console.log(response);
+  return response;
+};
+
+ProductsController.deleteProduct = async (id) => {
+  const response = await API.DELETE(HOSTS.BASE_URL, Controllers.product, id);
+  return response;
+};
+
+ProductsController.updateProduct = async (product) => {
+  const response = await API.PUT(
+    HOSTS.BASE_URL,
+    Controllers.product,
+    product._id,
+    product
+  );
+  return response;
 };
 
 export default ProductsController;

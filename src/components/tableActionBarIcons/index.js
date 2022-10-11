@@ -16,7 +16,7 @@ export default function TableActionBarIcons(props) {
         className="edit-icon-wrapper table-icon-item"
         onClick={handleEdit(row)}
       >
-        <EditIcon sx={{ color: "white" }} />
+        <EditIcon titleAccess="title show" sx={{ color: "white" }} />
       </div>
       <div
         onClick={handleDelete}

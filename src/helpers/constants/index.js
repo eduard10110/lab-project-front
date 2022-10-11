@@ -1,3 +1,6 @@
+import AddNewProductModal from "components/addNewProductModal";
+import AddNewRepositoryModal from "components/addNewRepositoryModal";
+import RepositoriesController from "controllers/repositories";
 import Utils from "helpers/utils";
 import routes from "routes/routes";
 
@@ -11,6 +14,7 @@ export const HOSTS = {
 
 export const Controllers = {
   product: "product",
+  repository: "repository",
 };
 
 export const menuNavbar = [
@@ -18,7 +22,6 @@ export const menuNavbar = [
     title: "կառավարում",
     subCategories: [
       { title: "Շտեմարաններ", path: routes.Repositories },
-      { title: "Ապրանքի անվանում", path: routes.ProductName },
       { title: "Հետազոտություն", path: routes.Research },
     ],
   },
@@ -102,24 +105,21 @@ const RepositoriesTableColumns = [
   },
   {
     flex: 1,
-    field: "Name",
+    field: "name",
     headerName: "Անվանում մուտքագրման",
-  },
-  {
-    flex: 1,
-    field: "field",
-    headerName: "դաշտ",
   },
 ];
 
 export const PAGES_DATA = {
   ProductIntroduction: {
+    withModal: true,
     withNewButton: true,
     withExport: true,
     buttonLabel: "Նոր + ",
     tableColumns: ProductIntroductionTableColumns,
   },
   Repositories: {
+    withModal: true,
     withNewButton: true,
     withExport: true,
     buttonLabel: "Նոր + ",
@@ -129,5 +129,10 @@ export const PAGES_DATA = {
 
 export const PAGES_GET_DATA_FUNCTIONS = {
   ProductIntroduction: Utils.getProducts,
-  Repositories: Utils.getRepositories
+  Repositories: RepositoriesController.getRepositories,
+};
+
+export const PAGES_MODALS = {
+  ProductIntroduction: AddNewProductModal,
+  Repositories: AddNewRepositoryModal,
 };

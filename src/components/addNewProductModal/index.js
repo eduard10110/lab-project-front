@@ -11,6 +11,7 @@ import {
   Select,
 } from "@mui/material";
 import ProductsController from "controllers/products";
+import { productTypes } from "helpers/enums";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -23,6 +24,7 @@ const inputValuesInitialState = {
   price: "",
   supplier: "",
   dateOfEntry: "",
+  lot: "",
 };
 
 export default function AddNewProductModal({
@@ -31,6 +33,7 @@ export default function AddNewProductModal({
   updatableData,
   getData,
 }) {
+  const [productType, setProductType] = useState(null);
   const [data, setData] = useState({
     name: "",
     type: "",
@@ -103,8 +106,24 @@ export default function AddNewProductModal({
             <FormControl className="anp-select" fullWidth>
               <InputLabel size="8px">Տեսակ</InputLabel>
               <Select onChange={handleChange("type")} value={data.type}>
-                <MenuItem value="reagent">Ռեագենտ</MenuItem>
-                <MenuItem value="consumable">Սպառվող</MenuItem>
+                {productTypes.map(({ label, id }) => (
+                  <MenuItem key={id} value={id}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>Ապրանքի անվանում</p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel size="8px">Ապրանքի անվանում</InputLabel>
+              <Select onChange={handleChange("type")} value={data.type}>
+                {productTypes.map(({ label, id }) => (
+                  <MenuItem key={id} value={id}>
+                    {label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
@@ -158,6 +177,15 @@ export default function AddNewProductModal({
               value={data.dateOfEntry}
               onChange={handleChange("dateOfEntry")}
               placeholder="Մուտքագրման ա/թ"
+            />
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>Լոտ</p>
+            <input
+              type="text"
+              value={data.dateOfEntry}
+              onChange={handleChange("lot")}
+              placeholder="Լոտ"
             />
           </div>
         </div>

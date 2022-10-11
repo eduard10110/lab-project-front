@@ -2,10 +2,13 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import excelIcon from "assets/images/excel-icon.png";
-import AddNewProductModal from "components/addNewProductModal";
 import TableActionBarIcons from "components/tableActionBarIcons";
-import { PAGES_DATA, PAGES_GET_DATA_FUNCTIONS } from "helpers/constants";
-import { useEffect, useMemo, useState } from "react";
+import {
+  PAGES_DATA,
+  PAGES_GET_DATA_FUNCTIONS,
+  PAGES_MODALS,
+} from "helpers/constants";
+import { useEffect, useState } from "react";
 
 export default function ProductIntroduction({ pageId }) {
   const tableRowActionBar = {
@@ -19,13 +22,14 @@ export default function ProductIntroduction({ pageId }) {
       />
     ),
   };
-  const { withNewButton, buttonLabel, tableColumns, withExport } =
+  const { withNewButton, buttonLabel, tableColumns, withExport, withModal } =
     PAGES_DATA[pageId];
   const [rows, setRows] = useState([]);
   const [addNewProductModal, setAddNewProductModal] = useState({
     open: false,
     updatableData: null,
   });
+  console.log(PAGES_DATA[pageId]);
   const [search, setSearch] = useState("");
   const [tablePaginationSettings, setTablePaginationSettings] = useState({
     rowsPerPageOptions: [10, 25, 50],
@@ -41,8 +45,8 @@ export default function ProductIntroduction({ pageId }) {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    pageId && getData();
+  }, [pageId]);
 
   const handlePageSizeChange = (e) =>
     setTablePaginationSettings({
@@ -60,16 +64,11 @@ export default function ProductIntroduction({ pageId }) {
 
   const closeAddNewProductModal = () =>
     setAddNewProductModal({ open: false, updatableData: null });
-
-  const tableColumnsFinally = useMemo(
-    () => [...tableColumns, tableRowActionBar],
-    []
-  );
-
+  const CurrentModal = PAGES_MODALS[pageId];
   return (
     <>
-      {addNewProductModal.open && (
-        <AddNewProductModal
+      {withModal && addNewProductModal.open && (
+        <CurrentModal
           {...addNewProductModal}
           handleClose={closeAddNewProductModal}
           getData={getData}
@@ -125,7 +124,10 @@ export default function ProductIntroduction({ pageId }) {
           </div>
         </div>
         <div className="table-wrapper">
-          <DataGrid columns={tableColumnsFinally} rows={rows} />
+          <DataGrid
+            columns={[...tableColumns, tableRowActionBar]}
+            rows={rows}
+          />
         </div>
       </div>
     </>

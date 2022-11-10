@@ -13,9 +13,20 @@
   font-weight: 600;
   text-decoration: none;
   transition-duration: 0.25s;
+  display: flex;
+  align-items: center;
+
+  > .circle-white {
+    margin-right: 10px;
+  }
+
+  > .circle-blue {
+    margin-left: 20px;
+    margin-right: 10px;
+  }
 }
 .menu-item:hover {
-  background-color: #29c0c9;
+  background-color: #2fa8af;
   border-radius: 16px;
 }
 
@@ -67,7 +78,7 @@
 }
 
 .menu-link-active {
-  background-color: #29c0c9;
+  background-color: #2fa8af;
   border-radius: 16px;
 }
 .menu-category-header {

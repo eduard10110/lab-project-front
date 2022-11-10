@@ -1,5 +1,6 @@
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import Translation from "components/translation";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { menuNavbar } from "../../helpers/constants/index";
@@ -24,11 +25,12 @@ export default function Menu() {
         <div className="menu-categories-item" key={index}>
           <div className="menu-category-header">
             <div className="menu-item" style={{ display: "flex" }}>
+              <div className="circle-white"></div>
               <p
                 style={{ cursor: "pointer" }}
                 onClick={handleArrowClick(index)}
               >
-                {title}
+                <Translation label={title} />
               </p>
               {menuCategoryOpened.find((elem) => elem === index) >= 0 ? (
                 <ArrowDropDownIcon onClick={handleArrowClick(index)} />
@@ -40,7 +42,8 @@ export default function Menu() {
           {menuCategoryOpened.find((elem) => elem === index) >= 0 &&
             subCategories.map(({ path, title }, index2) => (
               <NavLink className={getNavLinkClassName} to={path}>
-                {title}
+                <div className="circle-blue"></div>
+                <Translation label={title} />
               </NavLink>
             ))}
         </div>

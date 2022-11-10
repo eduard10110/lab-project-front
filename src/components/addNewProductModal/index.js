@@ -10,8 +10,10 @@ import {
   Modal,
   Select,
 } from "@mui/material";
+import Translation from "components/translation";
 import ProductsController from "controllers/products";
-import { productTypes } from "helpers/enums";
+import RepositoriesController from "controllers/repositories";
+import { productPackingTypes, productTypes, productUnits } from "helpers/enums";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -25,6 +27,8 @@ const inputValuesInitialState = {
   supplier: "",
   dateOfEntry: "",
   lot: "",
+  nameId: "",
+  packingType: "",
 };
 
 export default function AddNewProductModal({
@@ -33,7 +37,7 @@ export default function AddNewProductModal({
   updatableData,
   getData,
 }) {
-  const [productType, setProductType] = useState(null);
+  const [repositories, setRepositories] = useState(null);
   const [data, setData] = useState({
     name: "",
     type: "",
@@ -43,9 +47,17 @@ export default function AddNewProductModal({
     price: "",
     supplier: "",
     dateOfEntry: "",
+    nameId: "",
+    packingType: "",
   });
 
+  const getRepositories = async () => {
+    const repos = await RepositoriesController.getRepositories();
+    setRepositories(repos.data);
+  };
+
   useEffect(() => {
+    getRepositories();
     if (updatableData)
       setData({
         ...updatableData,
@@ -53,6 +65,10 @@ export default function AddNewProductModal({
         expirationDate: updatableData.expirationDate?.split("T")[0],
       });
   }, []);
+
+  useEffect(() => {
+    if (data.nameId) setData({ ...data, name: `${data.nameId}-${data.name}` });
+  }, [data.nameId]);
 
   const handleChange = (id) => (e) => {
     setData({ ...data, [id]: e.target.value });
@@ -64,11 +80,11 @@ export default function AddNewProductModal({
     newData.expirationDate = moment(newData.expirationDate).format(
       "MM/DD/YYYY"
     );
+    delete newData.nameId;
     updatableData
       ? await ProductsController.updateProduct(newData)
       : await ProductsController.createNewProduct(newData);
   };
-
   const handleAddNewProduct = async () => {
     await addNewProduct();
     await getData();
@@ -80,13 +96,18 @@ export default function AddNewProductModal({
     setData({ ...inputValuesInitialState });
   };
 
+  const getFilteredRepositories = () =>
+    repositories?.filter((elem) => elem.type === data.type);
+
   return (
     <Modal open={open}>
       <div className="add-newProduct-modal">
         <div className="add-new-product-header-wrapper">
           <div>
             <div className="circle-white"></div>
-            <h3>Ապրանքի մուտք</h3>
+            <h3>
+              <Translation label="_productIntroduction" />
+            </h3>
           </div>
           <IconButton onClick={handleClose}>
             <CloseIcon className="close-icon" />
@@ -94,110 +115,165 @@ export default function AddNewProductModal({
         </div>
         <div className="anp-form-wrapper">
           <div className="product-form-item-wrapper">
-            <p>Անվանում</p>
+            <p>
+              <Translation label="_type" />
+            </p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel size="8px">
+                <Translation label="_type" />
+              </InputLabel>
+              <Select onChange={handleChange("type")} value={data.type}>
+                {productTypes.map(
+                  ({ label, id, showInProductsModal }) =>
+                    showInProductsModal && (
+                      <MenuItem key={id} value={id}>
+                        {label}
+                      </MenuItem>
+                    )
+                )}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>
+              <Translation label="_productName" />
+            </p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel size="8px">
+                <Translation label="_productName" />
+              </InputLabel>
+              <Select onChange={handleChange("nameId")} value={data.nameId}>
+                {data.type &&
+                  getFilteredRepositories()?.map(({ name, type }) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>
+              <Translation label="_unitProduct" />
+            </p>
             <input
               value={data.name}
               onChange={handleChange("name")}
-              placeholder="անվանում"
+              placeholder={Translation({ label: "_unitProduct" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Տեսակ</p>
-            <FormControl className="anp-select" fullWidth>
-              <InputLabel size="8px">Տեսակ</InputLabel>
-              <Select onChange={handleChange("type")} value={data.type}>
-                {productTypes.map(({ label, id }) => (
-                  <MenuItem key={id} value={id}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="product-form-item-wrapper">
-            <p>Ապրանքի անվանում</p>
-            <FormControl className="anp-select" fullWidth>
-              <InputLabel size="8px">Ապրանքի անվանում</InputLabel>
-              <Select onChange={handleChange("type")} value={data.type}>
-                {productTypes.map(({ label, id }) => (
-                  <MenuItem key={id} value={id}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="product-form-item-wrapper">
-            <p>Քանակ</p>
+            <p>
+              <Translation label="_quantity" />
+            </p>
             <input
               type="number"
               value={data.quantity}
               onChange={handleChange("quantity")}
-              placeholder="քանակ"
+              placeholder={Translation({ label: "_quantity" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Միավոր</p>
-            <input
-              value={data.unit}
-              onChange={handleChange("unit")}
-              placeholder="Միավոր"
-            />
+            <p>
+              <Translation label="_unit" />
+            </p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel>
+                <Translation label="_unit" />
+              </InputLabel>
+              <Select onChange={handleChange("unit")} value={data.unit}>
+                {productUnits.map(({ label, value }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
           <div className="product-form-item-wrapper">
-            <p>Պիտանելիության ժամկետ</p>
+            <p>
+              <Translation label="_packingType" />
+            </p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel>
+                <Translation label="_packingType" />
+              </InputLabel>
+              <Select
+                onChange={handleChange("packingType")}
+                value={data.packingType}
+              >
+                {productPackingTypes.map(({ label, value }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>
+              <Translation label="_expirationDate" />
+            </p>
             <input
               type="date"
               value={data.expirationDate}
               onChange={handleChange("expirationDate")}
-              placeholder="Պիտանելիության ժամկետ"
+              placeholder={Translation({ label: "_expirationDate" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Գին</p>
+            <p>
+              <Translation label="_price" />
+            </p>
             <input
               type="number"
               value={data.price}
               onChange={handleChange("price")}
-              placeholder="Գին"
+              placeholder={Translation({ label: "_price" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Մատակարար</p>
+            <p>
+              <Translation label="_supplier" />
+            </p>
             <input
               value={data.supplier}
               onChange={handleChange("supplier")}
-              placeholder="Մատակարար"
+              placeholder={Translation({ label: "_supplier" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Մուտքագրման ա/թ</p>
+            <p>
+              <Translation label="_dateOfEntry" />
+            </p>
             <input
               type="date"
               value={data.dateOfEntry}
               onChange={handleChange("dateOfEntry")}
-              placeholder="Մուտքագրման ա/թ"
+              placeholder={Translation({ label: "_dateOfEntry" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Լոտ</p>
+            <p>
+              <Translation label="_lot" />
+            </p>
             <input
               type="text"
-              value={data.dateOfEntry}
+              value={data.lot}
               onChange={handleChange("lot")}
-              placeholder="Լոտ"
+              placeholder={Translation({ label: "_lot" })}
             />
           </div>
         </div>
         <div className="anp-buttons-wrapper">
           <button onClick={handleAddAndContinue} className="anp-add-button">
-            Ավելացնել <AddIcon />
+            <Translation label="_add" /> <AddIcon />
           </button>
           <button className="anp-submit-button" onClick={handleAddNewProduct}>
-            Հաստատել <DoneIcon />
+            <Translation label="_submit" /> <DoneIcon />
           </button>
           <button className="anp-cancel-button" onClick={handleClose}>
-            Չեղարկել <CloseIcon />
+            <Translation label="_cancel" /> <CloseIcon />
           </button>
         </div>
       </div>

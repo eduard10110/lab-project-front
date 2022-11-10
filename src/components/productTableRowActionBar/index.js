@@ -1,12 +1,11 @@
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ProductsController from "controllers/products";
+import EditIcon from "@mui/icons-material/Edit";
 
-export default function TableActionBarIcons(props) {
-  const { row, getData, handleEdit } = props;
+export default function ProductTableRowActionBar(props) {
+  const { row, getData, handleEdit, deleteProduct } = props;
 
   const handleDelete = async () => {
-    await ProductsController.deleteProduct(row._id);
+    await deleteProduct(row._id);
     await getData();
   };
 

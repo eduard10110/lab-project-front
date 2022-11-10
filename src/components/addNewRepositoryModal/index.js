@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
@@ -9,6 +10,7 @@ import {
   Modal,
   Select,
 } from "@mui/material";
+import Translation from "components/translation";
 import RepositoriesController from "controllers/repositories";
 import { productTypes } from "helpers/enums";
 import { useEffect, useState } from "react";
@@ -22,7 +24,6 @@ export default function AddNewRepositoryModal({
   const [data, setData] = useState({ name: "", type: "" });
 
   const handleChange = (id) => (e) => {
-    console.log("Hello");
     setData({ ...data, [id]: e.target.value });
   };
 
@@ -54,7 +55,9 @@ export default function AddNewRepositoryModal({
         <div className="add-new-product-header-wrapper">
           <div>
             <div className="circle-white"></div>
-            <h3>Ապրանքի անվանում</h3>
+            <h3>
+              <Translation label="_productName" />
+            </h3>
           </div>
           <IconButton onClick={handleClose}>
             <CloseIcon className="close-icon" />
@@ -62,17 +65,24 @@ export default function AddNewRepositoryModal({
         </div>
         <div className="anp-form-wrapper">
           <div className="product-form-item-wrapper">
-            <p>Ապրանքի Անվանում</p>
+            <p>
+              <Translation label="_productName" />
+            </p>
             <input
               onChange={handleChange("name")}
+              value={data.name}
               type="text"
-              placeholder="Ապրանքի Անվանում"
+              placeholder={Translation({ label: "_productName" })}
             />
           </div>
           <div className="product-form-item-wrapper">
-            <p>Տեսակ</p>
+            <p>
+              <Translation label="_type" />
+            </p>
             <FormControl className="anp-select" fullWidth>
-              <InputLabel size="8px">Տեսակ</InputLabel>
+              <InputLabel size="8px">
+                <Translation label="_type" />
+              </InputLabel>
               <Select onChange={handleChange("type")} value={data.type}>
                 {productTypes.map(({ label, id }) => (
                   <MenuItem key={id} value={id}>
@@ -85,13 +95,13 @@ export default function AddNewRepositoryModal({
         </div>
         <div className="anp-buttons-wrapper">
           <button onClick={handleAddAndContinue} className="anp-add-button">
-            Ավելացնել <AddIcon />
+            <Translation label="_add" /> <AddIcon />
           </button>
           <button className="anp-submit-button" onClick={handleAddNewProduct}>
-            Հաստատել <DoneIcon />
+            <Translation label="_submit" /> <DoneIcon />
           </button>
           <button className="anp-cancel-button" onClick={handleClose}>
-            Չեղարկել <CloseIcon />
+            <Translation label="_cancel" /> <CloseIcon />
           </button>
         </div>
       </div>

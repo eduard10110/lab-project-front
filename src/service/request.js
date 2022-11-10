@@ -1,8 +1,17 @@
 import axios from "axios";
 import { HOSTS, HostUrls } from "helpers/constants";
 
-const constructBaseURLFunction = (controller, method) =>
-  `${HostUrls.BASE_URL}/${controller}/${method}`;
+const constructQueryParams = (query) => {
+  if (!query || Object.keys(query).length === 0) return "";
+  let queryStr = "?";
+  Object.entries(query).forEach(
+    ([key, value]) => (queryStr = queryStr + `${key}=${value}&`)
+  );
+  return queryStr;
+};
+
+const constructBaseURLFunction = (controller, method, query) =>
+  `${HostUrls.BASE_URL}/${controller}/${method}${constructQueryParams(query)}`;
 
 const constructUrl = (host) => {
   switch (host) {
@@ -24,7 +33,7 @@ export const request = async (
   headers
 ) => {
   const response = await axios({
-    url: constructUrl(host)(controller, method),
+    url: constructUrl(host)(controller, method, query),
     method: reqMethod,
     headers: {
       ...headers,

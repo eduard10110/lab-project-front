@@ -2,39 +2,52 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import excelIcon from "assets/images/excel-icon.png";
-import TableActionBarIcons from "components/tableActionBarIcons";
+import Translation from "components/translation";
 import {
   PAGES_DATA,
   PAGES_GET_DATA_FUNCTIONS,
   PAGES_MODALS,
+  PAGE_DELETE_ROW_ITEM,
+  PAGE_EXPORT_TABLE_DATA,
+  TABLE_ROW_ACTION_BARS,
 } from "helpers/constants";
 import { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
+import { translationIdSelector } from "store/selectors/app";
 
 export default function ProductIntroduction({ pageId }) {
+  const CurrentPageRowActionBar = TABLE_ROW_ACTION_BARS[pageId];
   const tableRowActionBar = {
     field: "actions",
     headerName: "",
     renderCell: (params) => (
-      <TableActionBarIcons
+      <CurrentPageRowActionBar
         {...params}
         handleEdit={handleAddNewProduct}
         getData={getData}
+        deleteProduct={PAGE_DELETE_ROW_ITEM[pageId]}
       />
     ),
   };
-  const { withNewButton, buttonLabel, tableColumns, withExport, withModal } =
-    PAGES_DATA[pageId];
+  const {
+    withNewButton,
+    buttonLabel,
+    tableColumns,
+    withExport,
+    withModal,
+    pageTitle,
+  } = PAGES_DATA[pageId];
   const [rows, setRows] = useState([]);
   const [addNewProductModal, setAddNewProductModal] = useState({
     open: false,
     updatableData: null,
   });
-  console.log(PAGES_DATA[pageId]);
   const [search, setSearch] = useState("");
   const [tablePaginationSettings, setTablePaginationSettings] = useState({
     rowsPerPageOptions: [10, 25, 50],
     pageSize: 10,
   });
+  const translationId = useSelector(translationIdSelector, shallowEqual);
 
   const getData = async () => {
     PAGES_GET_DATA_FUNCTIONS[pageId]().then((res) =>
@@ -61,9 +74,18 @@ export default function ProductIntroduction({ pageId }) {
     () => {
       setAddNewProductModal({ open: true, updatableData });
     };
-
   const closeAddNewProductModal = () =>
     setAddNewProductModal({ open: false, updatableData: null });
+
+  const handleExport = () => PAGE_EXPORT_TABLE_DATA[pageId]();
+
+  const getTableColumns = () => {
+    const columns = CurrentPageRowActionBar
+      ? [...tableColumns[translationId], tableRowActionBar]
+      : tableColumns[translationId];
+    return columns;
+  };
+
   const CurrentModal = PAGES_MODALS[pageId];
   return (
     <>
@@ -77,7 +99,9 @@ export default function ProductIntroduction({ pageId }) {
       <div className="page-wrapper">
         <div className="ProductIntroduction-header-wrapper">
           <div className="circle-white"></div>
-          <p>Ապրանքի Մուտք</p>
+          <p>
+            <Translation label={pageTitle} />
+          </p>
         </div>
         <div className="table-header-actions-wrapper">
           <div>
@@ -87,7 +111,7 @@ export default function ProductIntroduction({ pageId }) {
                 variant="outlined"
                 className="create-new-product-btn"
               >
-                {buttonLabel}
+                <Translation label={buttonLabel} />
               </button>
             )}
             <div className="table-page-size-dropdown-wrapper">
@@ -104,30 +128,29 @@ export default function ProductIntroduction({ pageId }) {
                   </Select>
                 </FormControl>
               </div>
-              <p>գրառում</p>
+              <p>
+                <Translation label="_note" />
+              </p>
             </div>
           </div>
           <div>
             <input
-              placeholder="Որոնում"
+              placeholder={Translation({ label: "_search" })}
               type="search"
               value={search}
               onChange={handleSearch}
               className="search-input"
             />
             {withExport && (
-              <button className="download-btn">
-                Արտահանել{" "}
+              <button onClick={handleExport} className="download-btn">
+                <Translation label="_export" />
                 <img className="excel-icon" src={excelIcon} alt="excelIcon" />
               </button>
             )}
           </div>
         </div>
         <div className="table-wrapper">
-          <DataGrid
-            columns={[...tableColumns, tableRowActionBar]}
-            rows={rows}
-          />
+          <DataGrid columns={getTableColumns()} rows={rows} />
         </div>
       </div>
     </>

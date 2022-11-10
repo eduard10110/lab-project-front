@@ -2,8 +2,8 @@ import ProductsController from "controllers/products";
 
 const Utils = {};
 
-Utils.getProducts = async () => {
-  return await ProductsController.getProducts();
+Utils.getProducts = (query) => async () => {
+  return await ProductsController.getProducts(query);
 };
 
 export default Utils;

@@ -14,8 +14,13 @@ ProductsController.createNewProduct = async (body) => {
   return response;
 };
 
-ProductsController.getProducts = async () => {
-  const response = await API.GET(HOSTS.BASE_URL, Controllers.product, "");
+ProductsController.getProducts = async (query) => {
+  const response = await API.GET(
+    HOSTS.BASE_URL,
+    Controllers.product,
+    "",
+    query
+  );
   return response;
 };
 
@@ -30,6 +35,15 @@ ProductsController.updateProduct = async (product) => {
     Controllers.product,
     product._id,
     product
+  );
+  return response;
+};
+
+ProductsController.export = async () => {
+  const response = await API.POST(
+    HOSTS.BASE_URL,
+    Controllers.product,
+    Controllers.export
   );
   return response;
 };

@@ -22,6 +22,27 @@ const routesData = [
     Comp: lazy(() => import("pages/productIntroduction")),
     props: { pageId: "Repositories" },
   },
+  {
+    Title: "Product Output",
+    path: routes.ProductOutput,
+    exact: true,
+    Comp: lazy(() => import("pages/productIntroduction")),
+    props: { pageId: "ProductOutput" },
+  },
+  {
+    Title: "Storages",
+    path: routes.Storages,
+    exact: true,
+    Comp: lazy(() => import("pages/productIntroduction")),
+    props: { pageId: "Storages" },
+  },
+  {
+    Title: "Test",
+    path: routes.Research,
+    exact: true,
+    Comp: lazy(() => import("pages/productIntroduction")),
+    props: { pageId: "Test" },
+  },
 ];
 
 export default routesData;

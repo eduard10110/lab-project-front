@@ -7,5 +7,7 @@ const routes = {
   ProductOutput: "/productOutput",
   Rejection: "/rejection",
   Storages: "/storages",
+  ExportedProducts: "/exportedProducts",
+  MakedTests: "/makedTests",
 };
 export default routes;

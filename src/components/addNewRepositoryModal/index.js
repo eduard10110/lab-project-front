@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import Translation from "components/translation";
 import RepositoriesController from "controllers/repositories";
-import { productTypes } from "helpers/enums";
+import { productTypes, productUnits } from "helpers/enums";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { translationIdSelector } from "store/selectors/app";
 
 export default function AddNewRepositoryModal({
   open,
@@ -21,7 +23,8 @@ export default function AddNewRepositoryModal({
   updatableData,
   getData,
 }) {
-  const [data, setData] = useState({ name: "", type: "" });
+  const [data, setData] = useState({ name: "", type: "", unit: "" });
+  const translationId = useSelector(translationIdSelector);
 
   const handleChange = (id) => (e) => {
     setData({ ...data, [id]: e.target.value });
@@ -92,17 +95,36 @@ export default function AddNewRepositoryModal({
               </Select>
             </FormControl>
           </div>
+          <div className="product-form-item-wrapper">
+            <p>
+              <Translation label="_unit" />
+            </p>
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel>
+                <Translation label="_unit" />
+              </InputLabel>
+              <Select onChange={handleChange("unit")} value={data.unit}>
+                {productUnits[translationId].map(({ label, value }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
         </div>
         <div className="anp-buttons-wrapper">
-          <button onClick={handleAddAndContinue} className="anp-add-button">
-            <Translation label="_add" /> <AddIcon />
-          </button>
-          <button className="anp-submit-button" onClick={handleAddNewProduct}>
-            <Translation label="_submit" /> <DoneIcon />
-          </button>
-          <button className="anp-cancel-button" onClick={handleClose}>
-            <Translation label="_cancel" /> <CloseIcon />
-          </button>
+          <div>
+            <button onClick={handleAddAndContinue} className="anp-add-button">
+              <Translation label="_add" /> <AddIcon />
+            </button>
+            <button className="anp-submit-button" onClick={handleAddNewProduct}>
+              <Translation label="_submit" /> <DoneIcon />
+            </button>
+            <button className="anp-cancel-button" onClick={handleClose}>
+              <Translation label="_cancel" /> <CloseIcon />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

@@ -1,6 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
-import { IconButton, Modal } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+} from "@mui/material";
 import Translation from "components/translation";
 import ProductsController from "controllers/products";
 import { useState } from "react";
@@ -17,10 +24,17 @@ export default function ProductOutputModal({
     setData({ ...data, [id]: e.target.value });
 
   const handleAddNewProduct = async () => {
+    const newProductData = {
+      ...product,
+      quantity: product.quantity - data.quantity,
+      outputDescription: data.outputDescription,
+      storage: "4",
+    };
     await ProductsController.updateProduct({
       ...product,
       quantity: product.quantity - data.quantity,
     });
+    await ProductsController.createNewProduct(newProductData);
     await getData();
     onClose("output")();
   };
@@ -42,34 +56,39 @@ export default function ProductOutputModal({
         <div className="anp-form-wrapper">
           <div className="product-form-item-wrapper">
             <p>
-              <Translation label="_outputQuantity" />
+              <Translation label="_quantity" />
             </p>
             <input
               onChange={handleChange("quantity")}
               value={data.quantity}
               type="number"
-              placeholder={Translation({ label: "_outputQuantity" })}
+              placeholder={Translation({ label: "_quantity" })}
             />
           </div>
           <div className="product-form-item-wrapper">
             <p>
               <Translation label="_outputDescription" />
             </p>
-            <input
-              onChange={handleChange("outputDescription")}
-              value={data.outputDescription}
-              type="text"
-              placeholder={Translation({ label: "_outputDescription" })}
-            />
+            <FormControl className="anp-select" fullWidth>
+              <InputLabel size="8px">
+                <Translation label="_outputDescription" />
+              </InputLabel>
+              <Select onChange={handleChange("storage")} value={data.storage}>
+                <MenuItem value="Ելքագրում">Ելքագրում</MenuItem>
+                <MenuItem value="Խոտանում">Խոտանում</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </div>
         <div className="anp-buttons-wrapper">
-          <button className="anp-submit-button" onClick={handleAddNewProduct}>
-            <Translation label="_submit" /> <DoneIcon />
-          </button>
-          <button className="anp-cancel-button" onClick={onClose("output")}>
-            <Translation label="_cancel" /> <CloseIcon />
-          </button>
+          <div>
+            <button className="anp-submit-button" onClick={handleAddNewProduct}>
+              <Translation label="_submit" /> <DoneIcon />
+            </button>
+            <button className="anp-cancel-button" onClick={onClose("output")}>
+              <Translation label="_cancel" /> <CloseIcon />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

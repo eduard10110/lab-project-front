@@ -39,11 +39,13 @@ ProductsController.updateProduct = async (product) => {
   return response;
 };
 
-ProductsController.export = async () => {
+ProductsController.export = (query) => async () => {
   const response = await API.POST(
     HOSTS.BASE_URL,
     Controllers.product,
-    Controllers.export
+    Controllers.export,
+    {},
+    query
   );
   return response;
 };

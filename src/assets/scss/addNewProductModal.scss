@@ -24,6 +24,7 @@
     font-size: 14px;
     text-align: right;
   }
+  .autocomplete,
   input,
   select,
   option,
@@ -62,9 +63,15 @@
 }
 
 .anp-buttons-wrapper {
-  display: flex;
-  justify-content: center;
+  width: 100%;
   padding: 20px 0;
+  position: absolute;
+  bottom: 0%;
+
+  > div {
+    display: flex;
+    justify-content: center;
+  }
 
   button {
     width: 150px;
@@ -93,7 +100,7 @@
 }
 
 .product-distribution-modal {
-  height: 270px;
+  height: 350px;
 }
 
 .switcher-wrapper {
@@ -106,7 +113,8 @@
 }
 
 .test-modal {
-  height: 480px;
+  min-height: 480px;
+  max-height: 550px;
 }
 
 .test-modal-add-product-wrapper {
@@ -134,5 +142,44 @@
   .button-disabled {
     background-color: #969393;
     cursor: default;
+  }
+}
+
+.tm-products-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  > div {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+
+    > svg {
+      margin-top: 5px;
+    }
+  }
+}
+
+.error {
+  color: red;
+}
+
+.mtm-get-test-price-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 40px;
+  width: 100%;
+  margin-left: 20px;
+
+  > button {
+    width: 250px;
+    height: 30px;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
   }
 }

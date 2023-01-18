@@ -11,7 +11,7 @@ import Utils from "helpers/utils";
 import routes from "routes/routes";
 
 export const HostUrls = {
-  BASE_URL: "http://localhost:9164",
+  BASE_URL: "https://eipq.am/ayg",
 };
 
 export const HOSTS = {
@@ -23,6 +23,9 @@ export const Controllers = {
   repository: "repository",
   export: "export",
   test: "test",
+  makeTest: "make/makeTest",
+  make: "make",
+  maked: "maked",
 };
 
 export const menuNavbar = [
@@ -42,7 +45,11 @@ export const menuNavbar = [
   },
   {
     title: "_storage",
-    subCategories: [{ title: "_storages", path: routes.Storages }],
+    subCategories: [
+      { title: "_storages", path: routes.Storages },
+      { title: "_exportedProducts", path: routes.ExportedProducts },
+      { title: "_makedTests", path: routes.MakedTests },
+    ],
   },
 ];
 
@@ -184,6 +191,11 @@ const RepositoriesTableColumns = {
       field: "name",
       headerName: "Name",
     },
+    {
+      flex: 1,
+      field: "unit",
+      headerName: "Unit",
+    },
   ],
   arm: [
     {
@@ -194,12 +206,17 @@ const RepositoriesTableColumns = {
     {
       flex: 1,
       field: "type",
-      headerName: "Տեսակ ցանկ",
+      headerName: "Տեսակ",
     },
     {
       flex: 1,
       field: "name",
       headerName: "Ապրանքի անվանում",
+    },
+    {
+      flex: 1,
+      field: "unit",
+      headerName: "Միավոր",
     },
   ],
 };
@@ -297,14 +314,172 @@ export const StoragesTableColumns = {
 
 export const TEST_PAGE_COLUMNS = {
   en: [
-    { flex: 1, field: "name", headerName: "Research name" },
-    { flex: 1, field: "type", headerName: "Research type" },
-    { flex: 1, field: "dateOfEntry", headerName: "Research date of entry" },
+    { flex: 1, field: "name", headerName: "Test name" },
+    { flex: 1, field: "type", headerName: "Device name" },
+    { flex: 1, field: "packingType", headerName: "Packing type" },
+  ],
+  arm: [
+    { flex: 1, field: "name", headerName: "Հետազոտության անվանում" },
+    { flex: 1, field: "type", headerName: "Սարքի անվանում" },
+    { flex: 1, field: "packingType", headerName: "Փաթեթավորման տեսակ" },
+  ],
+};
+
+export const ExportedProductsTableColumns = {
+  en: [
+    {
+      width: 40,
+      field: "id",
+      headerName: "Id",
+    },
+    {
+      width: 100,
+      field: "type",
+      headerName: "Type",
+    },
+    {
+      flex: 1,
+      field: "name",
+      headerName: "Name",
+    },
+    {
+      width: 70,
+      field: "quantity",
+      headerName: "Quantity",
+    },
+    {
+      width: 70,
+      field: "unit",
+      headerName: "Unit",
+    },
+    {
+      flex: 1,
+      field: "expirationDate",
+      headerName: "Expiration Date",
+      className: "warning",
+      renderCell: ({ row }) => {
+        const getClassNameFunction = () => {
+          const currentDate = new Date().getTime();
+          const expirationDate = new Date(row.expirationDate).getTime();
+          const dateExpiring = expirationDate - currentDate > 7889400000;
+          return dateExpiring ? "" : "warning";
+        };
+        return (
+          <div className={getClassNameFunction()}>{row.expirationDate}</div>
+        );
+      },
+    },
+    {
+      width: 90,
+      field: "price",
+      headerName: "Price",
+    },
+    {
+      flex: 1,
+      field: "supplier",
+      headerName: "Supplier",
+    },
+    {
+      flex: 1,
+      field: "dateOfEntry",
+      headerName: "Date of entry",
+    },
+    {
+      flex: 1,
+      field: "storage",
+      headerName: "Storage",
+    },
+    {
+      flex: 1,
+      field: "exportedCount",
+      headerName: "Exported count",
+    },
+  ],
+  arm: [
+    {
+      width: 40,
+      field: "id",
+      headerName: "Հ/Հ",
+    },
+    {
+      width: 100,
+      field: "type",
+      headerName: "Տեսակ",
+    },
+    {
+      flex: 1,
+      field: "name",
+      headerName: "Անվանում",
+    },
+    {
+      width: 70,
+      field: "quantity",
+      headerName: "Քանակ",
+    },
+    {
+      width: 70,
+      field: "unit",
+      headerName: "Միավոր",
+    },
+    {
+      flex: 1,
+      field: "expirationDate",
+      headerName: "Պիտանելիության ժամկետ",
+      className: "warning",
+      renderCell: ({ row }) => {
+        const getClassNameFunction = () => {
+          const currentDate = new Date().getTime();
+          const expirationDate = new Date(row.expirationDate).getTime();
+          const dateExpiring = expirationDate - currentDate > 7889400000;
+          return dateExpiring ? "" : "warning";
+        };
+        return (
+          <div className={getClassNameFunction()}>{row.expirationDate}</div>
+        );
+      },
+    },
+    {
+      width: 90,
+      field: "price",
+      headerName: "Գին",
+    },
+    {
+      flex: 1,
+      field: "supplier",
+      headerName: "Մատակարար",
+    },
+    {
+      flex: 1,
+      field: "dateOfEntry",
+      headerName: "Մուտքագրման ա/թ",
+    },
+    {
+      flex: 1,
+      field: "storage",
+      headerName: "Տեղակայում",
+    },
+    {
+      flex: 1,
+      field: "exportedCount",
+      headerName: "Ելքագրված քանակ",
+    },
+  ],
+};
+
+const MakedTestsTableColumns = {
+  en: [
+    { flex: 1, field: "name", headerName: "Test name" },
+    { flex: 1, field: "type", headerName: "Test type" },
+    { flex: 1, field: "quantity", headerName: "Quantity" },
+    { flex: 1, field: "dateOfEntry", headerName: "Date" },
+    { flex: 1, field: "price", headerName: "Price" },
   ],
   arm: [
     { flex: 1, field: "name", headerName: "Հետազոտության անվանում" },
     { flex: 1, field: "type", headerName: "Հետազոտության տեսակ" },
-    { flex: 1, field: "dateOfEntry", headerName: "Հետազոտության տեսակ" },
+    { flex: 1, field: "quantity", headerName: "Քանակ" },
+    { flex: 1, field: "dateOfEntry", headerName: "Հետազոտության ամսաթիվ" },
+    { flex: 1, field: "price", headerName: "Հետազոտության գին" },
   ],
 };
 
@@ -321,7 +496,7 @@ export const PAGES_DATA = {
     pageTitle: "_repositories",
     withModal: true,
     withNewButton: true,
-    withExport: true,
+    withExport: false,
     buttonLabel: "_new",
     tableColumns: RepositoriesTableColumns,
   },
@@ -347,6 +522,20 @@ export const PAGES_DATA = {
     buttonLabel: "_new",
     tableColumns: TEST_PAGE_COLUMNS,
   },
+  ExportedProducts: {
+    pageTitle: "_exportedProducts",
+    withModal: false,
+    withExport: true,
+    withNewButton: false,
+    tableColumns: ExportedProductsTableColumns,
+  },
+  MakedTests: {
+    pageTitle: "_makedTests",
+    withModal: false,
+    withExport: true,
+    withNewButton: false,
+    tableColumns: MakedTestsTableColumns,
+  },
 };
 
 export const PAGES_GET_DATA_FUNCTIONS = {
@@ -355,11 +544,15 @@ export const PAGES_GET_DATA_FUNCTIONS = {
   ProductOutput: Utils.getProducts({ isStorageSpecified: 0 }),
   Storages: Utils.getProducts({ isStorageSpecified: 1 }),
   Test: TestController.getTestsData,
+  ExportedProducts: Utils.ExportedProduct({ isStorageSpecified: 1 }),
+  MakedTests: TestController.getMakedTests,
 };
 
 export const PAGE_EXPORT_TABLE_DATA = {
-  ProductIntroduction: ProductsController.export,
-  Storages: ProductsController.export,
+  ProductIntroduction: ProductsController.export({ isStorageSpecified: 0 }),
+  Storages: ProductsController.export({ isStorageSpecified: 1 }),
+  ExportedProducts: ProductsController.export({ isStorageSpecified: 1 }),
+  MakedTests: TestController.exportMakedTests,
 };
 
 export const PAGES_MODALS = {
@@ -371,6 +564,7 @@ export const PAGES_MODALS = {
 export const PAGE_DELETE_ROW_ITEM = {
   ProductIntroduction: ProductsController.deleteProduct,
   Repositories: RepositoriesController.delete,
+  Test: TestController.deleteTest,
 };
 
 export const TABLE_ROW_ACTION_BARS = {
@@ -379,4 +573,5 @@ export const TABLE_ROW_ACTION_BARS = {
   ProductOutput: ProductOutputTableRowActionBar,
   Storages: ProductOutputTableRowActionBar,
   Test: TestTableRowActionBar,
+  MakedTests: null,
 };

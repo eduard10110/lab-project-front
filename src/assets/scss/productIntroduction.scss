@@ -50,6 +50,19 @@
   }
 }
 
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px;
+
+  input {
+  }
+
+  .search-field-wrapper {
+    width: 300px;
+  }
+}
+
 .search-input {
   width: 300px;
   border-radius: 16px;
@@ -58,7 +71,7 @@
   height: 30px;
   color: #0a971a;
   padding: 0 20px;
-  margin-top: 90px;
+  margin-top: 20px;
 }
 
 .table-header-actions-wrapper {

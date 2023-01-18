@@ -3,12 +3,14 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 import {
+  Autocomplete,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
   Modal,
   Select,
+  TextField,
 } from "@mui/material";
 import Translation from "components/translation";
 import ProductsController from "controllers/products";
@@ -16,6 +18,8 @@ import RepositoriesController from "controllers/repositories";
 import { productPackingTypes, productTypes, productUnits } from "helpers/enums";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { translationIdSelector } from "store/selectors/app";
 
 const inputValuesInitialState = {
   name: "",
@@ -50,6 +54,7 @@ export default function AddNewProductModal({
     nameId: "",
     packingType: "",
   });
+  const translationId = useSelector(translationIdSelector);
 
   const getRepositories = async () => {
     const repos = await RepositoriesController.getRepositories();
@@ -67,11 +72,17 @@ export default function AddNewProductModal({
   }, []);
 
   useEffect(() => {
-    if (data.nameId) setData({ ...data, name: `${data.nameId}-${data.name}` });
+    if (data.nameId) {
+      const unit = repositories.find((elem) => elem.name === data.nameId).unit;
+      setData({ ...data, name: `${data.nameId}-`, unit });
+    }
   }, [data.nameId]);
 
-  const handleChange = (id) => (e) => {
-    setData({ ...data, [id]: e.target.value });
+  const handleChange = (id, subId) => (e, value) => {
+    setData({
+      ...data,
+      [id]: subId ? value[subId] : e.target.value,
+    });
   };
 
   const addNewProduct = async () => {
@@ -138,19 +149,19 @@ export default function AddNewProductModal({
             <p>
               <Translation label="_productName" />
             </p>
-            <FormControl className="anp-select" fullWidth>
-              <InputLabel size="8px">
-                <Translation label="_productName" />
-              </InputLabel>
-              <Select onChange={handleChange("nameId")} value={data.nameId}>
-                {data.type &&
-                  getFilteredRepositories()?.map(({ name, type }) => (
-                    <MenuItem key={name} value={name}>
-                      {name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              className="autocomplete"
+              options={getFilteredRepositories() || []}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  value={data.name}
+                  label={Translation({ label: "_productName" })}
+                />
+              )}
+              onChange={handleChange("nameId", "name")}
+            />
           </div>
           <div className="product-form-item-wrapper">
             <p>
@@ -177,38 +188,38 @@ export default function AddNewProductModal({
             <p>
               <Translation label="_unit" />
             </p>
-            <FormControl className="anp-select" fullWidth>
-              <InputLabel>
-                <Translation label="_unit" />
-              </InputLabel>
-              <Select onChange={handleChange("unit")} value={data.unit}>
-                {productUnits.map(({ label, value }) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              disabled
+              className="autocomplete"
+              options={productUnits[translationId] || []}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  value={data.unit}
+                  label={Translation({ label: "_unit" })}
+                />
+              )}
+              onChange={handleChange("unit", "value")}
+            />
           </div>
           <div className="product-form-item-wrapper">
             <p>
               <Translation label="_packingType" />
             </p>
-            <FormControl className="anp-select" fullWidth>
-              <InputLabel>
-                <Translation label="_packingType" />
-              </InputLabel>
-              <Select
-                onChange={handleChange("packingType")}
-                value={data.packingType}
-              >
-                {productPackingTypes.map(({ label, value }) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              className="autocomplete"
+              options={productPackingTypes[translationId] || []}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  value={data.name}
+                  label={Translation({ label: "_packingType" })}
+                />
+              )}
+              onChange={handleChange("packingType", "value")}
+            />
           </div>
           <div className="product-form-item-wrapper">
             <p>
@@ -266,15 +277,17 @@ export default function AddNewProductModal({
           </div>
         </div>
         <div className="anp-buttons-wrapper">
-          <button onClick={handleAddAndContinue} className="anp-add-button">
-            <Translation label="_add" /> <AddIcon />
-          </button>
-          <button className="anp-submit-button" onClick={handleAddNewProduct}>
-            <Translation label="_submit" /> <DoneIcon />
-          </button>
-          <button className="anp-cancel-button" onClick={handleClose}>
-            <Translation label="_cancel" /> <CloseIcon />
-          </button>
+          <div>
+            <button onClick={handleAddAndContinue} className="anp-add-button">
+              <Translation label="_add" /> <AddIcon />
+            </button>
+            <button className="anp-submit-button" onClick={handleAddNewProduct}>
+              <Translation label="_submit" /> <DoneIcon />
+            </button>
+            <button className="anp-cancel-button" onClick={handleClose}>
+              <Translation label="_cancel" /> <CloseIcon />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

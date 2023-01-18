@@ -14,7 +14,7 @@ export default function GetPossibleTestsModal({ open, handleClose, testId }) {
 
   const handleForecast = async () => {
     const response = await TestController.getPossibleTests(data, testId);
-    setResponseLabel(response.data?.count || response.data.errorMassage);
+    setResponseLabel(response.data?.count || response.data.errorMessage);
   };
 
   return (
@@ -26,10 +26,10 @@ export default function GetPossibleTestsModal({ open, handleClose, testId }) {
             <h3>
               <Translation label="_researchForecast" />
             </h3>
-            <IconButton onClick={handleClose}>
-              <CloseIcon className="close-icon" />
-            </IconButton>
           </div>
+          <IconButton onClick={handleClose}>
+            <CloseIcon className="close-icon" />
+          </IconButton>
         </div>
         <div className="anp-form-wrapper">
           <div className="product-form-item-wrapper">
@@ -48,12 +48,14 @@ export default function GetPossibleTestsModal({ open, handleClose, testId }) {
           <p>{responseLabel}</p>
         </div>
         <div className="anp-buttons-wrapper">
-          <button className="anp-submit-button" onClick={handleForecast}>
-            <Translation label="_forecast" /> <DoneIcon />
-          </button>
-          <button className="anp-cancel-button" onClick={handleClose}>
-            <Translation label="_cancel" /> <CloseIcon />
-          </button>
+          <div>
+            <button className="anp-submit-button" onClick={handleForecast}>
+              <Translation label="_forecast" /> <DoneIcon />
+            </button>
+            <button className="anp-cancel-button" onClick={handleClose}>
+              <Translation label="_cancel" /> <CloseIcon />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

@@ -22,7 +22,11 @@ export default function ProductOutputDistribution({
   getData,
 }) {
   const [rejection, setRejection] = useState(false);
-  const [data, setData] = useState({ quantity: 0, storage: "" });
+  const [data, setData] = useState({
+    quantity: 0,
+    storage: "",
+    dateOfEntry: "",
+  });
 
   const handleChange = (id) => (e) =>
     setData({ ...data, [id]: e.target.value });
@@ -42,7 +46,7 @@ export default function ProductOutputDistribution({
     const updatableProduct = {
       ...product,
       quantity: data.quantity,
-      dateOfDistribution: new Date(),
+      dateOfDistribution: data.dateOfEntry,
       storage: data.storage,
     };
     await ProductsController.updateProduct(updatableProduct);
@@ -68,6 +72,17 @@ export default function ProductOutputDistribution({
         <div className="anp-form-wrapper">
           <div className="product-form-item-wrapper">
             <p>
+              <Translation label="_dateOfExit" />
+            </p>
+            <input
+              type="date"
+              value={data.dateOfEntry}
+              onChange={handleChange("dateOfEntry")}
+              placeholder={Translation({ label: "_dateOfExit" })}
+            />
+          </div>
+          <div className="product-form-item-wrapper">
+            <p>
               <Translation label="_outputQuantity" />
             </p>
             <input
@@ -79,11 +94,11 @@ export default function ProductOutputDistribution({
           </div>
           <div className="product-form-item-wrapper">
             <p>
-              <Translation label="_outputQuantity" />
+              <Translation label="_subStorage" />
             </p>
             <FormControl disabled={rejection} className="anp-select" fullWidth>
               <InputLabel size="8px">
-                <Translation label="_outputQuantity" />
+                <Translation label="_subStorage" />
               </InputLabel>
               <Select onChange={handleChange("storage")} value={data.storage}>
                 {storages.map(({ label, id, disabled }) => (
@@ -104,15 +119,17 @@ export default function ProductOutputDistribution({
           </div>
         </div>
         <div className="anp-buttons-wrapper">
-          <button className="anp-submit-button" onClick={handleSubmit}>
-            <Translation label="_submit" /> <DoneIcon />
-          </button>
-          <button
-            className="anp-cancel-button"
-            onClick={handleClose("distribution")}
-          >
-            <Translation label="_cancel" /> <CloseIcon />
-          </button>
+          <div>
+            <button className="anp-submit-button" onClick={handleSubmit}>
+              <Translation label="_submit" /> <DoneIcon />
+            </button>
+            <button
+              className="anp-cancel-button"
+              onClick={handleClose("distribution")}
+            >
+              <Translation label="_cancel" /> <CloseIcon />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

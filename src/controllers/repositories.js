@@ -29,6 +29,11 @@ RepositoriesController.update = async (body) => {
   return response;
 };
 
+RepositoriesController.getRepositoryById = async (id) => {
+  const response = await API.GET(HOSTS.BASE_URL, Controllers.repository, id);
+  return response;
+};
+
 RepositoriesController.delete = async (id) => {
   const response = API.DELETE(HOSTS.BASE_URL, Controllers.repository, id);
   return response;

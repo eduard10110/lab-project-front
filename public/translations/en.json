@@ -35,5 +35,12 @@
   "_supplier": "Supplier",
   "_dateOfEntry": "Entry Date",
   "_lot": "Lot",
-  "_packingType": "Packing type"
+  "_packingType": "Packing type",
+  "_exportedProducts": "Exported products",
+  "_makeTest": "Do test",
+  "_makedTests": "Maked tests",
+  "pageDescription": "The electronic system for ordering, supplying, and storing laboratory supplies was created and put into operation by the National Pulmonology Center and the Los Angeles Childrens Hospital COM in conjunction with the Avetis educational program to manage the aforementioned functions at the center better by implementing by the requirements of expiration dates and monetary values, evaluation The system allows you to predict orders, and automatically calculate the required quantity, taking into account the balance of the stocks, as well as, in case of approaching or lit expiration dates, there is an alarm system.",
+  "_subStorage": "Substorage",
+  "_dateOfExit": "Date of distribution",
+  "_make": "Make"
 }

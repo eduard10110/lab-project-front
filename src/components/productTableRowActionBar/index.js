@@ -15,13 +15,13 @@ export default function ProductTableRowActionBar(props) {
         className="edit-icon-wrapper table-icon-item"
         onClick={handleEdit(row)}
       >
-        <EditIcon titleAccess="title show" sx={{ color: "white" }} />
+        <EditIcon titleAccess="Խմբագրել" sx={{ color: "white" }} />
       </div>
       <div
         onClick={handleDelete}
         className="delete-icon-wrapper table-icon-item"
       >
-        <DeleteIcon sx={{ color: "white" }} />
+        <DeleteIcon titleAccess="Ջնջել" sx={{ color: "white" }} />
       </div>
     </div>
   );

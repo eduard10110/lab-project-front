@@ -11,7 +11,7 @@ import Utils from "helpers/utils";
 import routes from "routes/routes";
 
 export const HostUrls = {
-  BASE_URL: "https://eipq.am/ayg",
+  BASE_URL: "http://localhost:9164",
 };
 
 export const HOSTS = {

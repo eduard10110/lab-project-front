@@ -32,7 +32,6 @@ export const request = async (
   data = {},
   headers
 ) => {
-  console.log(host);
   const response = await axios({
     url: constructUrl(host)(controller, method, query),
     method: reqMethod,

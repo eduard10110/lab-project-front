@@ -11,7 +11,7 @@ import Utils from "helpers/utils";
 import routes from "routes/routes";
 
 export const HostUrls = {
-  BASE_URL: "https://լաբ.հայ",
+  BASE_URL: "http://լաբ.հայ",
 };
 
 export const HOSTS = {

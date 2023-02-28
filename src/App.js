@@ -6,6 +6,7 @@ import RoutesBuilder from "routes";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  console.log("Hello");
   return (
     <div className="App">
       <BrowserRouter>
